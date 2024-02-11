@@ -1,21 +1,23 @@
-on: [push]
+name: Deploy to IPFS via Pinata
+
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-  hello_world_job:
+  deploy:
     runs-on: ubuntu-latest
-    name: Doing test deploy to Pinata
     steps:
-      - uses: actions/checkout@v2.1.0
-      - name: Pinata deploy action step
-        id: deploy
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to IPFS
         uses: anantaramdas/ipfs-pinata-deploy-action@v1.6.4
         with:
-          pin-name: 'TESTING (v1.6.3)'
-          path: './.github/workflows/site2test'
+          pin-name: 'My Website'
+          path: './website'
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_SECRET_API_KEY }}
           verbose: true
-          remove-old: false
-      # Use the output from the `deploy` step
-      - name: Get the output hash
-        run: echo "The hash was ${{ steps.deploy.outputs.hash }}"
+          remove-old: true
